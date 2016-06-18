@@ -5,7 +5,9 @@
     "start": "meteor run"
   },
   "dependencies": {
+    "body-parser": "^1.15.1",
     "express": "^4.14.0",
+    "lodash": "^4.13.1",
     "meteor-node-stubs": "~0.2.0",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",

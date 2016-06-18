@@ -1,11 +1,14 @@
 import { Meteor } from 'meteor/meteor'
 import Twitter from 'twitter'
+import bodyParser from 'body-parser'
+
 import {
 	TWITTER_CONSUMER_KEY, 
 	TWITTER_CONSUMER_SECRET, 
 	TWITTER_ACCESS_TOKEN_KEY, 
 	TWITTER_ACCESS_TOKEN_SECRET
 } from './constants.js'
+
 
 if(Meteor.isServer) {
 	Meteor.startup(() => {
@@ -18,29 +21,30 @@ if(Meteor.isServer) {
 		});
 
 	  	app = Express();
-		
+		app.use( bodyParser.json() );       // to support JSON-encoded bodies
+		app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+		  extended: true
+		})); 
+
 		app.get('/trends/available', function(req, res) {
 			client.get('trends/available', function(error, tweets, response){
 				if(error) throw error;
 				if ( response ) {
-					res.json(response);
-				} else {
-					res.send("error")
+					res.json({data: response.body});
 				}
 			});
 			
 		});
 
-		app.get('/trends', function(req, res) {
-			client.get('trends/place', {id: 1}, function(error, tweets, response){
+		app.post('/trends', function(req, res) {
+		    var woeid = req.body.woeid
+		    console.log("woeid: ",woeid)
+		    client.get('trends/place', {id: woeid}, function(error, tweets, response){
 				if(error) throw error;
 				if ( response ) {
-					res.json(response);
-				} else {
-					res.send("error")
+					res.json({data: response.body});
 				}
 			});
-			
 		});
 	 // 	Picker.route('/get/tutu', function(params, req, res, next) {
 		  	

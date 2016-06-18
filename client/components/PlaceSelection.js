@@ -4,6 +4,8 @@
 
 import React from 'react'
 import { connect } from 'react-redux'
+import _ from 'lodash'
+import { fetchTrends } from '../actions/api'
 
 //
 // COMPONENT
@@ -17,18 +19,18 @@ const PlaceSelection = ({
     <div>
       	<select onChange={(e) => {
 	        e.preventDefault()
-	        let val = e.target.options[e.target.selectedIndex].value
+	        const woeid = e.target.options[e.target.selectedIndex].value
 	        const promise = new Promise(function (resolve, reject) {})
 	        promise.then(dispatch({
-	          type: 'SET_CURRENT_PLACE',
-	          placeId: val
+	          type: 'SET_CURRENT_PLACE_WOEID',
+	          woeid: woeid
 	        })).then(
 	          fetchTrends()
 	        )
 	    }}>
-      		{placesAvailable.map((place) => {
+      		{placesAvailable.map((place, index) => {
 		      	return (
-		      		<option value={place.id}>{place.id}</option>
+		      		<option key={index} value={place.woeid}>{place.name}</option>
 		      	)
       		})}
         </select>
@@ -37,16 +39,19 @@ const PlaceSelection = ({
 }
 
 // CONNECT & EXPORT
-const mapStateToProps = ({
-  appReducer: {
-    placesAvailable
-  }
-}) => {
-  return {
-    placesAvailable
-  }
+const mapStateToProps = ({appReducer: {placesAvailable}}) => {
+  let list = _.sortBy(placesAvailable, 'name').map(obj => {
+    return obj
+  })
+  return {placesAvailable: list}
 }
 
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return { dispatch, fetchTrends}
+}
+
+
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(PlaceSelection) 

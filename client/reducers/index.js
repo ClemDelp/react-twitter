@@ -10,7 +10,8 @@ import { combineReducers } from 'redux'
 
 const intialState = {
   placesAvailable: [],
-  currentPlaceId: {}
+  currentPlaceWoeid: 1, // worldwide
+  trends: {}
 }
 
 //
@@ -25,9 +26,14 @@ function appReducer (state = intialState, action) {
         placesAvailable : action.placesAvailable
       })
 
-    case "SET_CURRENT_PLACE":
+    case "SET_CURRENT_PLACE_WOEID":
       return Object.assign({}, state, {
-        currentPlaceId: action.placeId
+        currentPlaceWoeid: action.woeid
+      })
+
+    case "SET_TRENDS":
+      return Object.assign({}, state, {
+        trends: action.trends
       })
 
     default:

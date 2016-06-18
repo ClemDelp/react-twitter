@@ -5,6 +5,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import PlaceSelection from './PlaceSelection'
+import TrendsList from './TrendsList'
 
 //
 // COMPONENT
@@ -15,6 +16,7 @@ const Index = () => (
     <header>
         <h1>Twitter trends</h1>
         <PlaceSelection />
+        <TrendsList />
     </header>
   </div>
 )
