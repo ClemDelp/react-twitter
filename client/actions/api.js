@@ -47,3 +47,18 @@ export function fetchTrends () {
 		console.log('get trends failed', ex)
 	})
 }
+
+export function getTweetStream () {
+	const store = getStore()
+	const trend = store.getState().appReducer.currentTrend
+	return fetch('/tweets', {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			hastag: trend.name
+		})
+	})
+}

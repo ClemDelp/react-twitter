@@ -18,12 +18,20 @@ fetchPlacesAvailable()
 // fetchTrends()
 
 // APP
+
+
 Meteor.startup(() => {
-  
+  	// Attach an handler for a specific message
+	Streamy.on('hello', function(tweet) {
+	  console.log(tweet)
+	  store.dispatch({
+	  	type: "ADD_TWEETS",
+	  	tweet: tweet
+	  })
+	});
 	const reactDivElement = document.getElementById('render-target')
 	if (reactDivElement) {
 		ReactDOM.render(<Root store={store} />, reactDivElement)
 	}
 
-});
-
+})

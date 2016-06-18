@@ -6,6 +6,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import PlaceSelection from './PlaceSelection'
 import TrendsList from './TrendsList'
+import TweetsList from './TweetsList'
 
 //
 // COMPONENT
@@ -16,7 +17,17 @@ const Index = () => (
     <header>
         <h1>Twitter trends</h1>
         <PlaceSelection />
-        <TrendsList />
+        <table height='90vh'>
+        	<tbody>
+	        	<tr>
+	        		<td><TrendsList /></td>
+	        		<td>
+	        			<strong>Tweets stream</strong>
+	        			<TweetsList />
+	        		</td>
+	        	</tr>
+        	</tbody>
+        </table>
     </header>
   </div>
 )

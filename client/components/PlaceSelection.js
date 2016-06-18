@@ -17,23 +17,23 @@ const PlaceSelection = ({
 }) => {
   return (
     <div>
-      	<select onChange={(e) => {
-	        e.preventDefault()
-	        const woeid = e.target.options[e.target.selectedIndex].value
-	        const promise = new Promise(function (resolve, reject) {})
-	        promise.then(dispatch({
-	          type: 'SET_CURRENT_PLACE_WOEID',
-	          woeid: woeid
-	        })).then(
-	          fetchTrends()
-	        )
+    	<select onChange={(e) => {
+        e.preventDefault()
+        const woeid = e.target.options[e.target.selectedIndex].value
+        const promise = new Promise(function (resolve, reject) {})
+        promise.then(dispatch({
+          type: 'SET_CURRENT_PLACE_WOEID',
+          woeid: woeid
+        })).then(
+          fetchTrends()
+        )
 	    }}>
-      		{placesAvailable.map((place, index) => {
-		      	return (
-		      		<option key={index} value={place.woeid}>{place.name}</option>
-		      	)
-      		})}
-        </select>
+    		{placesAvailable.map((place, index) => {
+	      	return (
+	      		<option key={index} value={place.woeid}>{place.name}</option>
+	      	)
+    		})}
+      </select>
     </div>
   )
 }

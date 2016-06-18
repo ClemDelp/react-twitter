@@ -11,7 +11,9 @@ import { combineReducers } from 'redux'
 const intialState = {
   placesAvailable: [],
   currentPlaceWoeid: 1, // worldwide
-  trends: {}
+  trends: {},
+  currentTrend: {},
+  tweets: []
 }
 
 //
@@ -31,9 +33,24 @@ function appReducer (state = intialState, action) {
         currentPlaceWoeid: action.woeid
       })
 
+    case "SET_CURRENT_TREND":
+      return Object.assign({}, state, {
+        currentTrend: action.trend
+      })
+
     case "SET_TRENDS":
       return Object.assign({}, state, {
         trends: action.trends
+      })
+
+    case "ADD_TWEETS":
+      return Object.assign({}, state, {
+        tweets: [...state.tweets, action.tweet]
+      })
+    
+    case "RESET_TWEETS":
+      return Object.assign({}, state, {
+        tweets: intialState.tweets
       })
 
     default:
