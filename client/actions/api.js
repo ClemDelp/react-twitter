@@ -58,7 +58,7 @@ export function getTweetStream () {
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({
-			hastag: trend.name
+			hastag: trend
 		})
 	})
 }

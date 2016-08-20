@@ -6,6 +6,11 @@ import React from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import { fetchTrends } from '../actions/api'
+import {setCurrentPlaceWoeid} from '../reducers/index'
+
+// MATERIAL UI
+import Menu from 'material-ui/Menu';
+import MenuItem from 'material-ui/MenuItem';
 
 //
 // COMPONENT
@@ -13,28 +18,28 @@ import { fetchTrends } from '../actions/api'
 
 const PlaceSelection = ({
   placesAvailable,
-  dispatch
+  setCurrentPlaceWoeid
 }) => {
   return (
-    <div>
-    	<select onChange={(e) => {
-        e.preventDefault()
-        const woeid = e.target.options[e.target.selectedIndex].value
+    <Menu onChange={(event, woeid) => {
         const promise = new Promise(function (resolve, reject) {})
-        promise.then(dispatch({
-          type: 'SET_CURRENT_PLACE_WOEID',
-          woeid: woeid
-        })).then(
+        promise.then(setCurrentPlaceWoeid(woeid))
+        .then(
           fetchTrends()
         )
-	    }}>
-    		{placesAvailable.map((place, index) => {
-	      	return (
-	      		<option key={index} value={place.woeid}>{place.name}</option>
-	      	)
-    		})}
-      </select>
-    </div>
+    }}>
+      {
+        placesAvailable.map((place, index) => {
+          return (
+            <MenuItem
+              key={index}
+              value={place.woeid}
+              primaryText={place.name}
+            />
+          )
+        })
+      }
+    </Menu>
   )
 }
 
@@ -46,12 +51,9 @@ const mapStateToProps = ({appReducer: {placesAvailable}}) => {
   return {placesAvailable: list}
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return { dispatch, fetchTrends}
-}
-
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  {
+    setCurrentPlaceWoeid
+  }
 )(PlaceSelection) 

@@ -26,6 +26,18 @@ if(Meteor.isServer) {
 		  extended: true
 		}));
 
+		const hastag = 'Usain Bolt'
+		const twitterStream = client.stream('statuses/filter', {track: String(hastag)});
+		let i = 0
+		twitterStream.on('data', function(tweet) {
+		  	// Send a message to all connected sessions (Client & server)
+		  	if (i%10 === 0) {
+		  		console.log('tweet --> ', tweet.id_str)
+				Streamy.broadcast('hello', tweet);	
+		  	}
+			i++
+		});
+
 		app.get('/trends/available', function(req, res) {
 			client.get('trends/available', function(error, tweets, response){
 				if(error) throw error;
@@ -40,11 +52,11 @@ if(Meteor.isServer) {
 			var hastag = req.body.hastag
 		    if (hastag) {
 		    	console.log("hastag: ", hastag)
-		    	const twitterStream = client.stream('statuses/filter', {track: 'ISLHUN'});
-				twitterStream.on('data', function(tweet) {
-				  	// Send a message to all connected sessions (Client & server)
-					Streamy.broadcast('hello', tweet);
-				});
+		  //   	const twitterStream = client.stream('statuses/filter', {track: String(hastag)});
+				// twitterStream.on('data', function(tweet) {
+				//   	// Send a message to all connected sessions (Client & server)
+				// 	Streamy.broadcast('hello', tweet);
+				// });
 		    }
 		});
 

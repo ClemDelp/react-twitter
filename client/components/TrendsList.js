@@ -1,52 +1,54 @@
 //
 // MODULE
 //
-
 import React from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import {getTweetStream} from '../actions/api.js'
+import {
+  setCurrentTrend,
+  resetTweets
+} from '../reducers/index'
+
+// MATERIAL UI
+import Menu from 'material-ui/Menu'
+import MenuItem from 'material-ui/MenuItem'
+
 //
 // COMPONENT
 //
 
 const TrendsList = ({
   trends,
-  getTweetStream,
-  dispatch
+  setCurrentTrend, 
+  resetTweets
 }) => {
   return (
-    <ul style={{
-      maxHeight: '90vh',
-      overflow: 'auto'
+    <Menu onChange={(event, trend) => {
+      const promise = new Promise(function (resolve, reject) {
+        resolve(
+          // UPDATE
+          setCurrentTrend(trend)
+        )
+      })
+      promise.then((trend) => {
+        // RESET TWEETS
+        resetTweets()
+        getTweetStream()
+      })
     }}>
-      {trends.map((trend, index) =>{
-        return (
-          <li 
-            key={index}
-            onClick={(e) => {
-              e.preventDefault()
-              const promise = new Promise(function (resolve, reject) {
-                resolve(
-                  // UPDATE
-                  dispatch({
-                    type: 'SET_CURRENT_TREND',
-                    trend: trend
-                  })
-                )
-              })
-              promise.then((trend) => {
-                // RESET TWEETS
-                dispatch({
-                  type: 'RESET_TWEETS'
-                })
-                getTweetStream()
-              })
-            }}
-          >{trend.name}</li>
-        )  
-      })}
-    </ul>
+      {
+        trends.map((trend, index) =>{
+          return (
+            <MenuItem
+              key={index}
+              value={trend.name}
+              primaryText={trend.name}
+            />
+          )  
+        })
+      }
+    </Menu>
   )
 }
 
@@ -58,11 +60,10 @@ const mapStateToProps = ({appReducer: {trends}}) => {
   return {trends: list}
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {dispatch, getTweetStream}
-}
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  {
+    setCurrentTrend, 
+    resetTweets
+  }
 )(TrendsList) 

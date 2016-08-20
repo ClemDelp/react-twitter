@@ -4,6 +4,10 @@
 
 import { combineReducers } from 'redux'
 
+const SET_CURRENT_PLACE_WOEID = 'SET_CURRENT_PLACE_WOEID'
+const SET_CURRENT_TREND = 'SET_CURRENT_TREND'
+const RESET_TWEETS = 'RESET_TWEETS'
+
 //
 // INITIAL STATE
 //
@@ -28,15 +32,11 @@ function appReducer (state = intialState, action) {
         placesAvailable : action.placesAvailable
       })
 
-    case "SET_CURRENT_PLACE_WOEID":
-      return Object.assign({}, state, {
-        currentPlaceWoeid: action.woeid
-      })
+    case SET_CURRENT_PLACE_WOEID:
+      return Object.assign({}, state, {currentPlaceWoeid: action.woeid})
 
-    case "SET_CURRENT_TREND":
-      return Object.assign({}, state, {
-        currentTrend: action.trend
-      })
+    case SET_CURRENT_TREND:
+      return Object.assign({}, state, {currentTrend: action.trend})
 
     case "SET_TRENDS":
       return Object.assign({}, state, {
@@ -48,10 +48,8 @@ function appReducer (state = intialState, action) {
         tweets: [...state.tweets, action.tweet]
       })
     
-    case "RESET_TWEETS":
-      return Object.assign({}, state, {
-        tweets: intialState.tweets
-      })
+    case RESET_TWEETS:
+      return Object.assign({}, state, {tweets: intialState.tweets})
 
     default:
       return state
@@ -68,3 +66,22 @@ const rootReducer = combineReducers({
 
 export default rootReducer
 
+export function setCurrentPlaceWoeid (woeid) {
+  return {
+    type: SET_CURRENT_PLACE_WOEID,
+    woeid
+  }
+}
+
+export function setCurrentTrend (trend) {
+  return {
+    type: SET_CURRENT_TREND,
+    trend
+  }
+}
+
+export function resetTweets () {
+  return {
+    type: RESET_TWEETS
+  }
+}

@@ -23,7 +23,6 @@ fetchPlacesAvailable()
 Meteor.startup(() => {
   	// Attach an handler for a specific message
 	Streamy.on('hello', function(tweet) {
-	  console.log(tweet)
 	  store.dispatch({
 	  	type: "ADD_TWEETS",
 	  	tweet: tweet
