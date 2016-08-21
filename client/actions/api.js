@@ -36,6 +36,7 @@ export function fetchTrends () {
 	.then(function (response) {
 		return response.json()
 	}).then(function (json) {
+		console.log(json)
 		const trends = JSON.parse(json.data)
 		// SET TRENDS
 		store.dispatch({
