@@ -12,24 +12,26 @@ import {
 	TWITTER_ACCESS_TOKEN_SECRET
 } from './constants.js'
 
-
 if(Meteor.isServer) {
 	Meteor.startup(() => {
-	  	// code to run on server at startup
-	  	const client = new Twitter({
+  	// code to run on server at startup
+  	const client = new Twitter({
 		  consumer_key: TWITTER_CONSUMER_KEY,
 		  consumer_secret: TWITTER_CONSUMER_SECRET,
 		  access_token_key: TWITTER_ACCESS_TOKEN_KEY,
 		  access_token_secret: TWITTER_ACCESS_TOKEN_SECRET,
 		});
 
-	  	app = Express();
+		let stream = null
+
+	  app = Express();
 		app.use( bodyParser.json() );       // to support JSON-encoded bodies
 		app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 		  extended: true
 		}));
 
-		// TO TEST
+
+		// // TO TEST
 		// const hastag = 'Usain Bolt'
 		// const twitterStream = client.stream('statuses/filter', {track: String(hastag)});
 		// let i = 0
@@ -41,7 +43,7 @@ if(Meteor.isServer) {
 		//   	}
 		// 	i++
 		// });
-		// -----
+
 
 		const timeCondition = function (lastDatetime, cbYes, cbNo) {
 			var last = new Date(lastDatetime)
@@ -93,7 +95,6 @@ if(Meteor.isServer) {
 			var woeid = req.body.woeid
 			if (woeid) {
 				Fiber(function () {
-					console.log(woeid)
 					const trend = Trend.findOne({woeid: woeid}, {sort: {datetime: -1, limit: 1}});
 					let datetime = 0
 					if (trend && trend.datetime) datetime = trend.datetime
@@ -118,7 +119,6 @@ if(Meteor.isServer) {
 								}
 							});
 						}, function() {
-							console.log('body --->', trend.body)
 							res.json({data: trend.body})
 						}
 					)
@@ -131,20 +131,26 @@ if(Meteor.isServer) {
 
 		app.post('/tweets', function(req, res) {
 			var hastag = req.body.hastag
+			console.log('tweeeet', hastag)
 		    if (hastag) {
 		    	console.log("hastag: ", hastag)
-		    	// const hastag = 'Usain Bolt'
-					if (twitterStream) twitterStream.destroy();
-					const twitterStream = client.stream('statuses/filter', {track: String(hastag)});
+					console.log(stream)
+					if (stream) {
+						stream.destroy()
+					}
+					stream = client.stream('statuses/filter', {track: String(hastag)});
 					let i = 0
-					twitterStream.on('data', function(tweet) {
+					stream.on('data', function(tweet) {
 					  	// Send a message to all connected sessions (Client & server)
 					  	if (i%10 === 0) {
 					  		console.log('tweet --> ', tweet.id_str)
-							Streamy.broadcast('hello', tweet);
+								Streamy.broadcast('hello', tweet);
 					  	}
 						i++
-					});
+					})
+					stream.on('error', function(error) {
+					  throw error;
+					})
 		    }
 		});
 

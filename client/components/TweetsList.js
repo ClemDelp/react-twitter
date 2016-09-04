@@ -82,10 +82,9 @@ const mapStateToProps = ({appReducer: {tweets}}) => {
   _tweets = _tweets.slice(0, 10)
   // const list = _.sortBy(tweets, 'timestamp_ms').map(obj => {
   //   return obj
-  // }).reverse()
-  console.log('pouette')
+  // })
 
-  return {tweets: _tweets}
+  return {tweets: _tweets.reverse()}
 }
 
 export default connect(

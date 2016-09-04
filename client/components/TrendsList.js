@@ -13,6 +13,7 @@ import {
 // MATERIAL UI
 import Menu from 'material-ui/Menu'
 import MenuItem from 'material-ui/MenuItem'
+import LinearProgress from 'material-ui/LinearProgress';
 
 //
 // COMPONENT
@@ -20,32 +21,52 @@ import MenuItem from 'material-ui/MenuItem'
 
 const TrendsList = ({
   trends,
-  setCurrentTrend, 
-  resetTweets
+  setCurrentTrend,
+  resetTweets,
+  totalVolume
 }) => {
   return (
-    <Menu onChange={(event, trend) => {
-      const promise = new Promise(function (resolve, reject) {
-        resolve(
-          // UPDATE
-          setCurrentTrend(trend)
-        )
-      })
-      promise.then((trend) => {
-        // RESET TWEETS
-        resetTweets()
-        getTweetStream()
-      })
-    }}>
+    <Menu
+      // onChange={(event, trend) => {
+      //   console.log('taaaa race')
+      //   const promise = new Promise(function (resolve, reject) {
+      //     resolve(
+      //       // UPDATE
+      //       setCurrentTrend(trend)
+      //     )
+      //   })
+      //   promise.then((trend) => {
+      //     // RESET TWEETS
+      //     resetTweets()
+      //     getTweetStream()
+      //   })
+      // }}
+    >
       {
         trends.map((trend, index) =>{
           return (
-            <MenuItem
-              key={index}
-              value={trend.name}
-              primaryText={trend.name}
-            />
-          )  
+            <div key={index}>
+              <MenuItem
+                value={trend.name}
+                primaryText={trend.name}
+                title={trend.tweet_volume}
+                onClick={() => {
+                  const promise = new Promise(function (resolve, reject) {
+                    resolve(
+                      // UPDATE
+                      setCurrentTrend(trend)
+                    )
+                  })
+                  promise.then((trend) => {
+                    // RESET TWEETS
+                    resetTweets()
+                    getTweetStream()
+                  })
+                }}
+              />
+              <LinearProgress mode="determinate" value={trend.tweet_volume * 100 / totalVolume} />
+            </div>
+          )
         })
       }
     </Menu>
@@ -54,16 +75,22 @@ const TrendsList = ({
 
 // CONNECT & EXPORT
 const mapStateToProps = ({appReducer: {trends}}) => {
-  let list = _.sortBy(trends.trends, 'tweet_volume').map(obj => {
-    return obj
+  let totalVolume = 0
+  let list = _.orderBy(trends.trends, 'tweet_volume', 'desc').filter(obj => {
+    if (obj && obj.tweet_volume) {
+      totalVolume += obj.tweet_volume
+      console.log(obj.tweet_volume)
+      return obj
+    }
   })
-  return {trends: list}
+  console.log(list)
+  return {trends: list, totalVolume}
 }
 
 export default connect(
   mapStateToProps,
   {
-    setCurrentTrend, 
+    setCurrentTrend,
     resetTweets
   }
-)(TrendsList) 
+)(TrendsList)

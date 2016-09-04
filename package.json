@@ -17,6 +17,7 @@
     "react-dom": "^15.1.0",
     "react-tap-event-plugin": "^1.0.0",
     "redux": "^3.5.2",
+    "twit": "^2.2.4",
     "whatwg-fetch": "^1.0.0"
   }
 }
