@@ -62,7 +62,7 @@ if(Meteor.isServer) {
 			}
 		}
 
-		app.get('/trends/available', function(req, res) {
+		app.get('/woeids', function(req, res) {
 			const woeid = Woeid.findOne({}, {sort: {datetime: -1, limit: 1}});
 			let datetime = 0
 			if (woeid && woeid.datetime) datetime = woeid.datetime

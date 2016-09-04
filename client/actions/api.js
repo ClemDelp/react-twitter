@@ -4,7 +4,7 @@ import { getStore } from '../main.jsx'
 
 export function fetchPlacesAvailable () {
 	const store = getStore()
-	return fetch('/trends/available')
+	return fetch('/woeids')
 	.then(function (response) {
 		return response.json()
 	}).then(function (json) {
