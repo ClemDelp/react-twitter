@@ -44,7 +44,7 @@ const TweetsList = ({
               style={styles.paper}
               zDepth={1}
               rounded={false}
-            > 
+            >
               <div className="row">
                 <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div className="box">
@@ -69,7 +69,7 @@ const TweetsList = ({
                 </div>
               </div>
             </Paper>
-          )  
+          )
         }
       )}
     </div>
@@ -83,6 +83,7 @@ const mapStateToProps = ({appReducer: {tweets}}) => {
   // const list = _.sortBy(tweets, 'timestamp_ms').map(obj => {
   //   return obj
   // }).reverse()
+  console.log('pouette')
 
   return {tweets: _tweets}
 }

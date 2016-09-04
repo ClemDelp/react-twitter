@@ -7,7 +7,6 @@ import { connect } from 'react-redux'
 import PlaceSelection from './PlaceSelection'
 import TrendsList from './TrendsList'
 import TweetsList from './TweetsList'
-import Footer from './Footer'
 import Header from './Header'
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -23,11 +22,8 @@ const Index = () => {
             height: '10vh'
         },
         box: {
-            height: '85vh',
+            height: '90vh',
             overflowY: 'auto'
-        },
-        footer: {
-            height: '5vh'
         }
     }
     return (
@@ -43,43 +39,26 @@ const Index = () => {
                     </div>
                 </div>
             </div>
-            
-            <div className="row">
-                <div 
-                    className="col-xs-2 col-sm-2 col-md-2 col-lg-2"
-                    style={styles.box}
-                >
-                    <div className="box">
-                        <PlaceSelection />
-                    </div>
-                </div>
-                <div 
-                    className="col-xs-2 col-sm-2 col-md-2 col-lg-2"
-                    style={styles.box}
-                >
-                    <div className="box">
-                        <TrendsList />
-                    </div>
-                </div>
-                <div 
-                    className="col-xs-8 col-sm-8 col-md-8 col-lg-8"
-                    style={styles.box}
-                >
-                    <div className="box">
-                        <TweetsList />
-                    </div>
-                </div>
-            </div>
 
             <div className="row">
-                <div className="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                    <div
-                        style={styles.header}
-                        className="box"
-                    >
-                        <Footer />
-                    </div>
+              <div
+                className="col-xs-3 col-sm-3 col-md-3 col-lg-3"
+                style={styles.box}
+              >
+                <div className="box">
+                  <PlaceSelection />
+                  <TrendsList />
                 </div>
+              </div>
+
+              <div
+                className="col-xs-9 col-sm-9 col-md-9 col-lg-9"
+                style={styles.box}
+              >
+                <div className="box">
+                  <TweetsList />
+                </div>
+              </div>
             </div>
 
         </div>

@@ -1,7 +1,7 @@
 //
 // MODULE
 //
-
+import AutoComplete from 'material-ui/AutoComplete';
 import React from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
@@ -17,29 +17,28 @@ import MenuItem from 'material-ui/MenuItem';
 //
 
 const PlaceSelection = ({
-  placesAvailable,
+  placesIndexedByName,
+  words,
   setCurrentPlaceWoeid
 }) => {
   return (
-    <Menu onChange={(event, woeid) => {
-        const promise = new Promise(function (resolve, reject) {})
-        promise.then(setCurrentPlaceWoeid(woeid))
-        .then(
-          fetchTrends()
-        )
-    }}>
-      {
-        placesAvailable.map((place, index) => {
-          return (
-            <MenuItem
-              key={index}
-              value={place.woeid}
-              primaryText={place.name}
-            />
+    <AutoComplete
+      onNewRequest={(name) => {
+        if (placesIndexedByName[name] && placesIndexedByName[name].woeid) {
+          const woeid = placesIndexedByName[name].woeid
+          console.log(placesIndexedByName[name])
+          console.log('woeid', woeid)
+          const promise = new Promise(function (resolve, reject) {})
+          promise.then(setCurrentPlaceWoeid(woeid))
+          .then(
+            fetchTrends()
           )
-        })
-      }
-    </Menu>
+        }
+      }}
+      floatingLabelText="Search for places..."
+      filter={AutoComplete.caseInsensitiveFilter}
+      dataSource={words}
+    />
   )
 }
 
@@ -48,7 +47,9 @@ const mapStateToProps = ({appReducer: {placesAvailable}}) => {
   let list = _.sortBy(placesAvailable, 'name').map(obj => {
     return obj
   })
-  return {placesAvailable: list}
+  const placesIndexedByName = _.keyBy(list, 'name')
+  const words = Object.keys(placesIndexedByName)
+  return {placesIndexedByName, words}
 }
 
 export default connect(
@@ -56,4 +57,4 @@ export default connect(
   {
     setCurrentPlaceWoeid
   }
-)(PlaceSelection) 
+)(PlaceSelection)

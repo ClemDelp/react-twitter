@@ -6,9 +6,9 @@ import { Woeid } from '../imports/api/Woeid.js'
 var Fiber = require('fibers')
 
 import {
-	TWITTER_CONSUMER_KEY, 
-	TWITTER_CONSUMER_SECRET, 
-	TWITTER_ACCESS_TOKEN_KEY, 
+	TWITTER_CONSUMER_KEY,
+	TWITTER_CONSUMER_SECRET,
+	TWITTER_ACCESS_TOKEN_KEY,
 	TWITTER_ACCESS_TOKEN_SECRET
 } from './constants.js'
 
@@ -37,7 +37,7 @@ if(Meteor.isServer) {
 		//   	// Send a message to all connected sessions (Client & server)
 		//   	if (i%10 === 0) {
 		//   		console.log('tweet --> ', tweet.id_str)
-		// 		Streamy.broadcast('hello', tweet);	
+		// 		Streamy.broadcast('hello', tweet);
 		//   	}
 		// 	i++
 		// });
@@ -63,7 +63,7 @@ if(Meteor.isServer) {
 		app.get('/trends/available', function(req, res) {
 			const woeid = Woeid.findOne({}, {sort: {datetime: -1, limit: 1}});
 			let datetime = 0
-			if (woeid && woeid.datetime) datetime = woeid.datetime 
+			if (woeid && woeid.datetime) datetime = woeid.datetime
 			timeCondition(
 				datetime,
 				function() {
@@ -82,13 +82,13 @@ if(Meteor.isServer) {
 		        			}).run()
 							res.json({data: response.body});
 						}
-					});	
+					});
 				}, function() {
 					res.json({data: woeid.body})
 				}
 			)
 		});
-		
+
 		app.post('/trends', function(req, res) {
 			var woeid = req.body.woeid
 			if (woeid) {
@@ -96,7 +96,7 @@ if(Meteor.isServer) {
 					console.log(woeid)
 					const trend = Trend.findOne({woeid: woeid}, {sort: {datetime: -1, limit: 1}});
 					let datetime = 0
-					if (trend && trend.datetime) datetime = trend.datetime 
+					if (trend && trend.datetime) datetime = trend.datetime
 					timeCondition(
 						datetime,
 						function() {
@@ -105,27 +105,28 @@ if(Meteor.isServer) {
 								if ( response ) {
 									// INSERT IN DB
 									Fiber(function () {
-				          				Trend.insert({
-				          					woeid: woeid,
-				          					datetime: new Date(),
-				          					body: response.body
-				          				}, function (error, response) {
-				          					console.log(response)
-								        	console.log('new trend in db ', Trend.find().count())
-								        })
-				        			}).run()
+        						Trend.insert({
+	          					woeid: woeid,
+	          					datetime: new Date(),
+	          					body: response.body
+	          				}, function (error, response) {
+	          					console.log(response)
+					        		console.log('new trend in db ', Trend.find().count())
+					        	})
+				        	}).run()
 									res.json({data: response.body});
 								}
-							});	
+							});
 						}, function() {
-							res.json({data: woeid.body})
+							console.log('body --->', trend.body)
+							res.json({data: trend.body})
 						}
 					)
-				}).run()	
+				}).run()
 			} else {
 				res.json({data: 'error required a valid woeid'})
 			}
-			
+
 		});
 
 		app.post('/tweets', function(req, res) {
@@ -133,19 +134,19 @@ if(Meteor.isServer) {
 		    if (hastag) {
 		    	console.log("hastag: ", hastag)
 		    	// const hastag = 'Usain Bolt'
-				const twitterStream = client.stream('statuses/filter', {track: String(hastag)});
-				let i = 0
-				twitterStream.on('data', function(tweet) {
-				  	// Send a message to all connected sessions (Client & server)
-				  	if (i%10 === 0) {
-				  		console.log('tweet --> ', tweet.id_str)
-						Streamy.broadcast('hello', tweet);	
-				  	}
-					i++
-				});
+					if (twitterStream) twitterStream.destroy();
+					const twitterStream = client.stream('statuses/filter', {track: String(hastag)});
+					let i = 0
+					twitterStream.on('data', function(tweet) {
+					  	// Send a message to all connected sessions (Client & server)
+					  	if (i%10 === 0) {
+					  		console.log('tweet --> ', tweet.id_str)
+							Streamy.broadcast('hello', tweet);
+					  	}
+						i++
+					});
 		    }
 		});
 
   	});
 }
-
